@@ -4,7 +4,7 @@ import pandas as pd
 import joblib
 
 # === Load the trained model ===
-model = joblib.load("D:/CostEstApp/Model/Model12.pkl")
+model = joblib.load("./model9_fin.pkl")
 
 # === Define encoding mappings ===
 cushioning_map = {'CC': 0, 'CH': 1, 'NC': 2}
@@ -17,8 +17,8 @@ mounting_map = {'TM+RE': 0,'CM+RE' : 1,'CM+RM' :2,'CC+RE' : 3,'SPL' : 4}
 
 # === Define input headers (must match training model) ===
 input_headers = [
-    "Pressure", "Bore", "Rod diameter", "Stroke","Piston_Thickness","CEC_Thickness","HEC-OD","HEC_Thickness","Tube_OD","Rod_Length","Cushioning", 
-    "BearingY-N","Cyl Type","Mounting"
+    "Pressure", "Bore", "Rod diameter", "Stroke","CEC_Thickness","HEC-OD","Rod_Length","Cushioning", 
+    "BearingY-N"
 ]
 
 st.set_page_config(page_title="Hydraulic Cost Estimator", layout="centered")
@@ -52,11 +52,11 @@ pressure = slider_with_input("Pressure", 100, 500, 10, 250)
 bore = slider_with_input("Bore", 10, 500, 1, 100)
 rod_dia = slider_with_input("Rod diameter", 10, 500, 1, 75)
 stroke = slider_with_input("Stroke", 100, 5000, 1, 750)
-piston_thickness = slider_with_input("Piston_Thickness", 10, 500, 1, 100)
+
 cec_thickness = slider_with_input("CEC_Thickness", 10, 500, 1, 100)
 hec_od = slider_with_input("HEC-OD", 10, 500, 1, 100)
-hec_thickness = slider_with_input("HEC-Thickness", 10, 500, 1, 100)
-tube_od = slider_with_input("Tube_OD", 10, 500, 1, 100)
+
+
 rod_length = slider_with_input("Rod_Length", 100, 5000, 1, 750)
 
 
@@ -68,8 +68,7 @@ rod_length = slider_with_input("Rod_Length", 100, 5000, 1, 750)
 # === Categorical Inputs ===
 cushioning = st.selectbox("Cushioning", options=list(cushioning_map.keys()))
 bearing = st.selectbox("BearingY-N", options=list(bearing_map.keys()))
-cyl_type = st.selectbox("Cyl Type", options=list(cyltype_map.keys()))
-mounting = st.selectbox("Mounting", options=list(mounting_map.keys()))
+
 
 
 # === Predict ===
@@ -84,11 +83,9 @@ if st.button("Predict Cost 💰"):
     # ]], columns=input_headers)
 
     input_data = pd.DataFrame([[
-        pressure, bore, rod_dia, stroke,piston_thickness,cec_thickness,hec_od,hec_thickness,tube_od, rod_length,
+        pressure, bore, rod_dia, stroke,cec_thickness,hec_od, rod_length,
         cushioning_map[cushioning],
         bearing_map[bearing],
-        cyltype_map[cyl_type], 
-        mounting_map[mounting] 
     ]], columns=input_headers)
 
     # Predict
